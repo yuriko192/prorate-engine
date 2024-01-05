@@ -38,7 +38,7 @@ interface SimpleDialogProps {
 
 function SimpleDialog(props: SimpleDialogProps) {
   const { onClose, open } = props;
-  const [isNeverClickSubmit, setNeverClickSubmit] = React.useState(true);
+  const [clickedSubmit, setClickedSubmitStatus] = React.useState(false);
   const [productName, setProductName] = React.useState("");
   const [productPrice, setProductPrice] = React.useState(0);
   const [productWeight, setProductWeight] = React.useState(1);
@@ -48,7 +48,7 @@ function SimpleDialog(props: SimpleDialogProps) {
     setProductName("");
     setProductPrice(0);
     setProductWeight(1);
-    setNeverClickSubmit(true);
+    setClickedSubmitStatus(false);
     setIsEditDataPreserved(false);
   }
 
@@ -59,7 +59,7 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   const handleSubmit = () => {
     if (productName === "" || productPrice <= 0 || productWeight <= 0) {
-      setNeverClickSubmit(false)
+      setClickedSubmitStatus(true)
       return
     }
 
@@ -85,7 +85,7 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   return (
     <Dialog onClose={handleClose} open={open} maxWidth={'md'} fullWidth>
-      <DialogTitle>Set backup account</DialogTitle>
+      <DialogTitle>{props.mode == dialogMode.ADD ? 'Add product' : props.mode == dialogMode.EDIT ? 'Edit product' : 'Invalid mode'}</DialogTitle>
       <DialogContent>
         <List>
           <ListItem disableGutters>
@@ -94,10 +94,9 @@ function SimpleDialog(props: SimpleDialogProps) {
               required
               variant='filled'
               type='text'
-              label='Product
-              Name'
+              label='Product Name'
               fullWidth
-              error={!isNeverClickSubmit && productName === ""}
+              error={clickedSubmit && productName === ""}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setProductName(event.target.value);
               }}
@@ -111,7 +110,7 @@ function SimpleDialog(props: SimpleDialogProps) {
               type='number'
               label='Price'
               fullWidth
-              error={!isNeverClickSubmit && productPrice <= 0}
+              error={clickedSubmit && productPrice <= 0}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 if (!event.target.valueAsNumber) {
                   setProductPrice(0);
@@ -130,7 +129,7 @@ function SimpleDialog(props: SimpleDialogProps) {
               type='number'
               label='Weight'
               fullWidth
-              error={!isNeverClickSubmit && productWeight <= 0}
+              error={clickedSubmit && productWeight <= 0}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 if (!event.target.valueAsNumber) {
                   setProductWeight(0);
@@ -319,7 +318,7 @@ function App() {
                                 <TableCell>{product.ProductName}</TableCell>
                                 <TableCell align='center'>{currFormatter.format(product.ProductPrice)}</TableCell>
                                 <TableCell align='center'>{product.Weight}</TableCell>
-                                <TableCell align='center'>{currFormatter.format(product.FinalPrice)} <a style={{fontSize: 12, color: 'green'}}>({currFormatter.format(product.FinalPrice/product.Weight)})</a></TableCell>
+                                <TableCell align='center'>{currFormatter.format(product.FinalPrice)} <a style={{fontSize: 12, color: 'green', fontWeight: 'bold'}}>({currFormatter.format(product.FinalPrice/product.Weight)})</a></TableCell>
                                 <TableCell align='center'>
                                   <Grid container columnSpacing={1} rowSpacing={1} justifyContent={'center'}>
                                     <Grid item>
