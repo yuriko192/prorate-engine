@@ -1,153 +1,26 @@
 import './App.css';
-import { AppBar, Button, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Grid, List, ListItem, ListItemButton, Paper, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TextField, Toolbar, Typography } from '@mui/material'
+import {
+  AppBar,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TextField,
+  Toolbar,
+  Typography
+} from '@mui/material'
 import React from 'react';
-import { Edit as EditIcon, Delete as DeleteIcon, Edit } from '@mui/icons-material'
-
-interface ProductDetail {
-  Name: string,
-  Price: number,
-  Weight: number,
-}
-
-interface ProrateResult {
-  ProductName: string,
-  ProductPrice: number,
-  Weight: number,
-  FinalPrice: number,
-}
-
-enum dialogMode {
-  NONE = '',
-  ADD = 'ADD',
-  EDIT = 'EDIT',
-}
-
-interface onCloseParam {
-  mode: dialogMode,
-  index: number,
-  productDetail: ProductDetail,
-}
-
-interface SimpleDialogProps {
-  open: boolean;
-  onClose: (param?: onCloseParam) => void;
-  mode: dialogMode,
-  index?: number,
-  productDetail?: ProductDetail,
-}
-
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open } = props;
-  const [clickedSubmit, setClickedSubmitStatus] = React.useState(false);
-  const [productName, setProductName] = React.useState("");
-  const [productPrice, setProductPrice] = React.useState(0);
-  const [productWeight, setProductWeight] = React.useState(1);
-  const [isEditDataPreserved, setIsEditDataPreserved] = React.useState(false);
-
-  const setStateToDefault = () => {
-    setProductName("");
-    setProductPrice(0);
-    setProductWeight(1);
-    setClickedSubmitStatus(false);
-    setIsEditDataPreserved(false);
-  }
-
-  const handleClose = () => {
-    onClose();
-    setStateToDefault();
-  };
-
-  const handleSubmit = () => {
-    if (productName === "" || productPrice <= 0 || productWeight <= 0) {
-      setClickedSubmitStatus(true)
-      return
-    }
-
-    onClose({
-      mode: props.mode,
-      index: props.index as number,
-      productDetail: {
-        Name: productName,
-        Price: productPrice,
-        Weight: productWeight,
-      },
-    });
-
-    setStateToDefault();
-  };
-
-  if (props.mode == dialogMode.EDIT && !isEditDataPreserved) {
-    setProductName(props.productDetail?.Name as string);
-    setProductPrice(props.productDetail?.Price as number);
-    setProductWeight(props.productDetail?.Weight as number);
-    setIsEditDataPreserved(true);
-  }
-
-  return (
-    <Dialog onClose={handleClose} open={open} maxWidth={'md'} fullWidth>
-      <DialogTitle>{props.mode == dialogMode.ADD ? 'Add product' : props.mode == dialogMode.EDIT ? 'Edit product' : 'Invalid mode'}</DialogTitle>
-      <DialogContent>
-        <List>
-          <ListItem disableGutters>
-            <TextField
-              value={productName ?? ''}
-              required
-              variant='filled'
-              type='text'
-              label='Product Name'
-              fullWidth
-              error={clickedSubmit && productName === ""}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setProductName(event.target.value);
-              }}
-            />
-          </ListItem>
-          <ListItem disableGutters>
-            <TextField
-              value={(!productPrice || productPrice == 0) ? '' : productPrice}
-              required
-              variant='filled'
-              type='number'
-              label='Price'
-              fullWidth
-              error={clickedSubmit && productPrice <= 0}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                if (!event.target.valueAsNumber) {
-                  setProductPrice(0);
-                  return
-                }
-
-                setProductPrice(event.target.valueAsNumber);
-              }}
-            />
-          </ListItem>
-          <ListItem disableGutters>
-            <TextField
-              value={(!productWeight || productWeight == 0) ? '' : productWeight}
-              required
-              variant='filled'
-              type='number'
-              label='Weight'
-              fullWidth
-              error={clickedSubmit && productWeight <= 0}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                if (!event.target.valueAsNumber) {
-                  setProductWeight(0);
-                  return
-                }
-
-                setProductWeight(event.target.valueAsNumber);
-              }}
-            />
-          </ListItem>
-          <ListItem disableGutters>
-            <Button variant='contained' fullWidth sx={{ minHeight: 50 }} onClick={handleSubmit}>{props.mode == dialogMode.ADD ? 'Add Product' : 'Edit'}</Button>
-          </ListItem>
-        </List>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import {Delete as DeleteIcon, Edit as EditIcon} from '@mui/icons-material'
+import {SimpleDialog} from "./components/SimpleDialog";
+import {dialogMode} from "./enums";
+import {onCloseParam, ProductDetail, ProrateResult} from "./interface";
 
 function App() {
   const [open, setOpen] = React.useState(false);
