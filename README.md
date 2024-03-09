@@ -1,5 +1,7 @@
 # Prorate Engine
 
+Page: [Prorate-Engine](https://yuriko192.github.io/prorate-engine/)
+
 a simple split bill application
 
 # Contribute
@@ -26,4 +28,7 @@ npm start
 
 #Builds the app for production to the `build` folder
 npm run build
+
+#Publish the changes to github pages
+npm run deploy
 ```
