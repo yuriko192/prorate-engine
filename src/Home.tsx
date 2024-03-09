@@ -5,7 +5,8 @@ import {
     AppBar,
     Button,
     Container,
-    Grid, Paper,
+    Grid,
+    Paper,
     Table,
     TableBody,
     TableCell,
@@ -14,7 +15,8 @@ import {
     TableRow,
     TextField,
     Toolbar,
-    Typography, useTheme
+    Typography,
+    useTheme
 } from "@mui/material";
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -23,6 +25,7 @@ import {AddItemDialog} from "./components/AddItemDialog";
 import {ColorModeContext} from "./context";
 import {currFormatter, GetLocalStorage, RemoveLocalStorage, SetLocalStorageWithExpiry} from "./utils";
 import {DefaultLocalStorageExpiry, LocalItemListKey} from "./const";
+import {ShareDialog} from "./components/ShareDialog";
 
 
 function Home() {
@@ -275,6 +278,7 @@ function Home() {
                 productDetail={dialogProductDetail}
                 index={dialogIndex}
             />
+            <ShareDialog></ShareDialog>
         </React.Fragment>
     );
 }

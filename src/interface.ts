@@ -1,4 +1,4 @@
-import {dialogMode} from "./enums";
+import {dialogMode, paymentType} from "./enums";
 
 export interface ProductDetail {
     Name: string,
@@ -25,4 +25,10 @@ export interface SimpleDialogProps {
     mode: dialogMode,
     index?: number,
     productDetail?: ProductDetail,
+}
+
+export interface PaymentDetails {
+    type: paymentType
+    accountNumber:string,
+    OtherText:string
 }
