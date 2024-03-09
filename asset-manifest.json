@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/prorate-engine/static/css/main.50bbccc4.css",
+    "main.js": "/prorate-engine/static/js/main.c9cd84b4.js",
+    "index.html": "/prorate-engine/index.html",
+    "main.50bbccc4.css.map": "/prorate-engine/static/css/main.50bbccc4.css.map",
+    "main.c9cd84b4.js.map": "/prorate-engine/static/js/main.c9cd84b4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.50bbccc4.css",
+    "static/js/main.c9cd84b4.js"
+  ]
+}
