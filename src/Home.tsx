@@ -19,9 +19,10 @@ import {
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
-import {SimpleDialog} from "./components/SimpleDialog";
+import {AddItemDialog} from "./components/AddItemDialog";
 import {ColorModeContext} from "./context";
-import {currFormatter} from "./utils";
+import {currFormatter, GetLocalStorage, RemoveLocalStorage, SetLocalStorageWithExpiry} from "./utils";
+import {DefaultLocalStorageExpiry, LocalItemListKey} from "./const";
 
 
 function Home() {
@@ -29,7 +30,7 @@ function Home() {
     const colorMode = React.useContext(ColorModeContext);
 
     const [open, setOpen] = React.useState(false);
-    const [productList, setProductList] = React.useState<Array<ProductDetail>>([])
+    const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey)?GetLocalStorage(LocalItemListKey):[])
     const [discountAmount, setDiscountAmount] = React.useState(0)
     const [otherFee, setOtherFee] = React.useState(0)
     const [dialogModeState, setDialogMode] = React.useState<dialogMode>(dialogMode.NONE)
@@ -50,6 +51,11 @@ function Home() {
         setDialogMode(dialogMode.EDIT)
         setDialogIndex(idx)
         setDialogProductDetail(productList[idx])
+    }
+
+    const handleClear = ()=>{
+        RemoveLocalStorage(LocalItemListKey)
+        setProductList([])
     }
 
     const handleDelete = (idx: number) => {
@@ -96,6 +102,7 @@ function Home() {
         totalWeight = 0,
         totalFinalPrice = 0
 
+    SetLocalStorageWithExpiry(LocalItemListKey, productList,DefaultLocalStorageExpiry)
     productList.forEach((eachProduct) => {
         totalWeight += eachProduct.Quantity
         totalProductPrice += eachProduct.Price
@@ -136,13 +143,13 @@ function Home() {
                         }}
                     >
                         <Toolbar
-                            sx={{
-                                justifyContent: 'space-between'
-                            }}
                         >
-                            <Typography variant="h6" color="inherit" noWrap>
+                            <Typography variant="h6" color="inherit" flexGrow={1} noWrap>
                                 Prorate Engine
                             </Typography>
+                            <Button sx={{ml: 1}} onClick={handleClear} variant={'contained'} color="error">
+                                <DeleteIcon/> Clear
+                            </Button>
                             <Button sx={{ml: 1}} onClick={colorMode.toggleColorMode} color="inherit">
                                 {theme.palette.mode} mode {theme.palette.mode === 'dark' ? <Brightness7Icon/> :
                                 <Brightness4Icon/>}
@@ -152,7 +159,7 @@ function Home() {
                 </Grid>
                 <Grid item flex={1} sx={{py: 2,}}>
                     <Container maxWidth="md" sx={{height: '100%', p: {xs: 0}}}>
-                        <Paper variant="outlined" sx={{p: {xs: 2, md: 3}, height: '100%'}}>
+                        <Paper elevation={3} sx={{p: {xs: 2, md: 3}, height: '100%'}} square={false}>
                             <Grid container direction={'column'} columnSpacing={1} rowSpacing={1} sx={{height: '100%'}}>
                                 <Grid item container justifyContent={'space-between'} columnSpacing={1} rowSpacing={1}>
                                     <Grid item xs={12} md={6}>
@@ -245,9 +252,15 @@ function Home() {
                                             </TableFooter>
                                         </Table>
                                     </Grid>
-                                    <Grid item>
-                                        <Button variant='contained' fullWidth sx={{minHeight: 50}}
-                                                onClick={handleClickOpen}>Add Product</Button>
+                                    <Grid item container spacing={2}>
+                                        <Grid item xs>
+                                            <Button variant='contained' fullWidth sx={{minHeight: 50}}
+                                                    onClick={handleClickOpen}>Add Product</Button>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Button variant={'outlined'} fullWidth sx={{minHeight: 50}}
+                                                    onClick={handleClickOpen}>Share</Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -255,7 +268,7 @@ function Home() {
                     </Container>
                 </Grid>
             </Grid>
-            <SimpleDialog
+            <AddItemDialog
                 open={open}
                 onClose={handleClose}
                 mode={dialogModeState}

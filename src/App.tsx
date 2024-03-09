@@ -1,15 +1,23 @@
 import React from 'react';
 import './App.css';
 import Home from "./Home";
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
-import {ColorModeContext } from "./context";
+import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from "@mui/material";
+import {ColorModeContext} from "./context";
+import {themeMode} from "./enums";
+import {LocalThemeKey} from "./const";
 
 function App() {
-    const [mode, setMode] = React.useState<'light' | 'dark'>('dark');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+    const [mode, setMode] = React.useState<themeMode>(prefersDarkMode ? themeMode.DARK : themeMode.LIGHT);
     const colorMode = React.useMemo(
         () => ({
             toggleColorMode: () => {
-                setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+                setMode((prevMode) => {
+                    let newTheme = prevMode === themeMode.DARK ? themeMode.LIGHT : themeMode.DARK
+                    localStorage.setItem(LocalThemeKey,newTheme)
+                    return newTheme
+                });
             },
         }),
         [],

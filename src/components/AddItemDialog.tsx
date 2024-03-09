@@ -3,7 +3,7 @@ import {Button, Dialog, DialogContent, DialogTitle, List, ListItem, TextField} f
 import {SimpleDialogProps} from "../interface";
 import {dialogMode} from "../enums";
 
-export function SimpleDialog(props: SimpleDialogProps) {
+export function AddItemDialog(props: SimpleDialogProps) {
     const {onClose, open} = props;
     const [clickedSubmit, setClickedSubmitStatus] = React.useState(false);
     const [productName, setProductName] = React.useState("");

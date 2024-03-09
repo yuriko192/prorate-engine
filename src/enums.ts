@@ -3,3 +3,8 @@ export enum dialogMode {
     ADD = 'ADD',
     EDIT = 'EDIT',
 }
+
+export enum themeMode {
+    LIGHT = 'light',
+    DARK = 'dark',
+}
