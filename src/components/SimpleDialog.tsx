@@ -36,7 +36,7 @@ export function SimpleDialog(props: SimpleDialogProps) {
             productDetail: {
                 Name: productName,
                 Price: productPrice,
-                Weight: productWeight,
+                Quantity: productWeight,
             },
         });
 
@@ -46,7 +46,7 @@ export function SimpleDialog(props: SimpleDialogProps) {
     if (props.mode == dialogMode.EDIT && !isEditDataPreserved) {
         setProductName(props.productDetail?.Name as string);
         setProductPrice(props.productDetail?.Price as number);
-        setProductWeight(props.productDetail?.Weight as number);
+        setProductWeight(props.productDetail?.Quantity as number);
         setIsEditDataPreserved(true);
     }
 
@@ -59,7 +59,7 @@ export function SimpleDialog(props: SimpleDialogProps) {
                         <TextField
                             value={productName ?? ''}
                             required
-                            variant='filled'
+                            variant='outlined'
                             type='text'
                             label='Product Name'
                             fullWidth
@@ -73,7 +73,7 @@ export function SimpleDialog(props: SimpleDialogProps) {
                         <TextField
                             value={(!productPrice || productPrice == 0) ? '' : productPrice}
                             required
-                            variant='filled'
+                            variant='outlined'
                             type='number'
                             label='Price'
                             fullWidth
@@ -92,9 +92,9 @@ export function SimpleDialog(props: SimpleDialogProps) {
                         <TextField
                             value={(!productWeight || productWeight == 0) ? '' : productWeight}
                             required
-                            variant='filled'
+                            variant='outlined'
                             type='number'
-                            label='Weight'
+                            label='Quantity'
                             fullWidth
                             error={clickedSubmit && productWeight <= 0}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

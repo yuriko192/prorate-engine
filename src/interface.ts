@@ -3,13 +3,13 @@ import {dialogMode} from "./enums";
 export interface ProductDetail {
     Name: string,
     Price: number,
-    Weight: number,
+    Quantity: number,
 }
 
 export interface ProrateResult {
     ProductName: string,
     ProductPrice: number,
-    Weight: number,
+    Quantity: number,
     FinalPrice: number,
 }
 

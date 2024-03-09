@@ -21,6 +21,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
 import {SimpleDialog} from "./components/SimpleDialog";
 import {ColorModeContext} from "./context";
+import {currFormatter} from "./utils";
 
 
 function Home() {
@@ -34,8 +35,6 @@ function Home() {
     const [dialogModeState, setDialogMode] = React.useState<dialogMode>(dialogMode.NONE)
     const [dialogProductDetail, setDialogProductDetail] = React.useState<ProductDetail>()
     const [dialogIndex, setDialogIndex] = React.useState(0)
-
-    const currFormatter = new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'})
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -70,7 +69,7 @@ function Home() {
             setProductList([...productList, {
                 Name: param.productDetail.Name,
                 Price: param.productDetail.Price,
-                Weight: param.productDetail.Weight,
+                Quantity: param.productDetail.Quantity,
             }])
             return
         }
@@ -82,7 +81,7 @@ function Home() {
                     newProductList.push({
                         Name: param.productDetail.Name,
                         Price: param.productDetail.Price,
-                        Weight: param.productDetail.Weight,
+                        Quantity: param.productDetail.Quantity,
                     })
                     return
                 }
@@ -98,17 +97,17 @@ function Home() {
         totalFinalPrice = 0
 
     productList.forEach((eachProduct) => {
-        totalWeight += eachProduct.Weight
+        totalWeight += eachProduct.Quantity
         totalProductPrice += eachProduct.Price
         prorateDataResult.push({
             ProductName: eachProduct.Name,
             ProductPrice: eachProduct.Price,
-            Weight: eachProduct.Weight,
+            Quantity: eachProduct.Quantity,
             FinalPrice: 0,
         })
     })
 
-    prorateDataResult.forEach((eachDataResult, idx) => {
+    prorateDataResult.forEach((eachDataResult:ProrateResult, idx:number) => {
         eachDataResult.FinalPrice = eachDataResult.ProductPrice
 
         if (discountAmount > 0) {
@@ -116,7 +115,7 @@ function Home() {
         }
 
         if (otherFee > 0) {
-            eachDataResult.FinalPrice += (otherFee * eachDataResult.Weight / totalWeight)
+            eachDataResult.FinalPrice += (otherFee * eachDataResult.Quantity / totalWeight)
         }
 
         totalFinalPrice += eachDataResult.FinalPrice
@@ -159,7 +158,7 @@ function Home() {
                                     <Grid item xs={12} md={6}>
                                         <TextField
                                             value={(!discountAmount || discountAmount <= 0) ? '' : discountAmount}
-                                            variant='filled' type='number' label='Discount amount' fullWidth
+                                            variant='outlined' type='number' label='Discount amount' fullWidth
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                 if (!event.target.valueAsNumber) {
                                                     setDiscountAmount(0)
@@ -171,7 +170,7 @@ function Home() {
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={6}>
-                                        <TextField value={(!otherFee || otherFee <= 0) ? '' : otherFee} variant='filled'
+                                        <TextField value={(!otherFee || otherFee <= 0) ? '' : otherFee} variant='outlined'
                                                    type='number' label='Other fee' fullWidth
                                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                        if (!event.target.valueAsNumber) {
@@ -191,7 +190,7 @@ function Home() {
                                                 <TableRow>
                                                     <TableCell>Product Name</TableCell>
                                                     <TableCell align='center'>Price</TableCell>
-                                                    <TableCell align='center'>Weight</TableCell>
+                                                    <TableCell align='center'>Quantity</TableCell>
                                                     <TableCell align='center'>Final Price (each)</TableCell>
                                                     <TableCell align='center'>Action</TableCell>
                                                 </TableRow>
@@ -204,14 +203,14 @@ function Home() {
                                                                 <TableCell>{product.ProductName}</TableCell>
                                                                 <TableCell
                                                                     align='center'>{currFormatter.format(product.ProductPrice)}</TableCell>
-                                                                <TableCell align='center'>{product.Weight}</TableCell>
+                                                                <TableCell align='center'>{product.Quantity}</TableCell>
                                                                 <TableCell
                                                                     align='center'>{currFormatter.format(product.FinalPrice)}
                                                                     <a style={{
                                                                         fontSize: 12,
                                                                         color: 'green',
                                                                         fontWeight: 'bold'
-                                                                    }}>({currFormatter.format(product.FinalPrice / product.Weight)})</a></TableCell>
+                                                                    }}>({currFormatter.format(product.FinalPrice / product.Quantity)})</a></TableCell>
                                                                 <TableCell align='center'>
                                                                     <Grid container columnSpacing={1} rowSpacing={1}
                                                                           justifyContent={'center'}>
