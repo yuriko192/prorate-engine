@@ -1,0 +1,77 @@
+.MainContainer{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.ContentContainer{
+  flex-grow: 1;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.Absolute{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.Fixed{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.Background{
+  z-index: -1;
+}
+.Test{
+  height: 300vh;
+}
+.custom-shape-divider-bottom-1710166162 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1710166162 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 169px;
+}
+
+.custom-shape-divider-bottom-1710166162 .shape-fill {
+  fill: #25425D;
+}
+
+.custom-shape-divider-top-1710167091 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-top-1710167091 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 169px;
+}
+
+.custom-shape-divider-top-1710167091 .shape-fill {
+  fill: #25425D;
+}
