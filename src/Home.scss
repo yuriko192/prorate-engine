@@ -35,6 +35,50 @@
 .Test{
   height: 300vh;
 }
+
+$dark-color: #25425D;
+$light-color: #6EB5FF;
+$appbar-margin:4rem;
+
+.appbar{
+  width: 100%;
+  height: $appbar-margin;
+}
+
+.custom-shape-divider-top-1710167091 {
+  position: absolute;
+  top: $appbar-margin;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-top-1710167091 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 300px;
+}
+
+.dark {
+  .appbar{
+    background: $dark-color;
+  }
+  .shape-fill{
+    fill: $dark-color;
+  }
+}
+
+.light {
+  .appbar{
+    background: $light-color;
+  }
+  .shape-fill{
+    fill: $light-color;
+  }
+}
+
 .custom-shape-divider-bottom-1710166162 {
   position: absolute;
   bottom: 0;
@@ -50,28 +94,4 @@
   display: block;
   width: calc(100% + 1.3px);
   height: 169px;
-}
-
-.custom-shape-divider-bottom-1710166162 .shape-fill {
-  fill: #25425D;
-}
-
-.custom-shape-divider-top-1710167091 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.custom-shape-divider-top-1710167091 svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 169px;
-}
-
-.custom-shape-divider-top-1710167091 .shape-fill {
-  fill: #25425D;
 }

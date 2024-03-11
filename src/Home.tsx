@@ -137,28 +137,19 @@ function Home() {
     return (
         <React.Fragment>
             <div className="MainContainer">
-                <AppBar
-                    color='default'
-                    elevation={0}
-                    sx={{
-                        position: 'relative',
-                        borderBottom: (t) => `1px solid ${t.palette.divider}`
-                    }}
+                <Toolbar
                 >
-                    <Toolbar
-                    >
-                        <Typography variant="h6" color="inherit" flexGrow={1} noWrap>
-                            Prorate Engine
-                        </Typography>
-                        <Button sx={{ml: 1}} onClick={handleClear} variant={'contained'} color="error">
-                            <DeleteIcon/> Clear
-                        </Button>
-                        <Button sx={{ml: 1}} onClick={colorMode.toggleColorMode} color="inherit">
-                            {theme.palette.mode} mode {theme.palette.mode === 'dark' ? <Brightness7Icon/> :
-                            <Brightness4Icon/>}
-                        </Button>
-                    </Toolbar>
-                </AppBar>
+                    <Typography variant="h6" color="inherit" flexGrow={1} noWrap>
+                        Prorate Engine
+                    </Typography>
+                    <Button sx={{ml: 1}} onClick={handleClear} variant={'contained'} color="error">
+                        <DeleteIcon/> Clear
+                    </Button>
+                    <Button sx={{ml: 1}} onClick={colorMode.toggleColorMode} color="inherit">
+                        {theme.palette.mode} mode {theme.palette.mode === 'dark' ? <Brightness7Icon/> :
+                        <Brightness4Icon/>}
+                    </Button>
+                </Toolbar>
                 <div className="ContentContainer">
                     <Container maxWidth="md" sx={{height: '100%', p: {xs: 0}}}>
                         <Paper elevation={3} sx={{p: {xs: 2, md: 3}, height: '100%'}} square={false}>
@@ -275,7 +266,8 @@ function Home() {
                         </Paper>
                     </Container>
                 </div>
-                <div className="Fixed Background">
+                <div className={`Fixed Background ${theme.palette.mode}`}>
+                    <div className="appbar"></div>
                     <div className="custom-shape-divider-top-1710167091">
                         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
                              preserveAspectRatio="none">
