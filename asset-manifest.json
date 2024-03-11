@@ -1,13 +1,18 @@
 {
   "files": {
-    "main.css": "/prorate-engine/static/css/main.50bbccc4.css",
-    "main.js": "/prorate-engine/static/js/main.c9cd84b4.js",
+    "main.css": "/prorate-engine/static/css/main.9ff89e48.css",
+    "main.js": "/prorate-engine/static/js/main.66fa0464.js",
+    "static/media/BCAIcon.png": "/prorate-engine/static/media/BCAIcon.3177f8084bf0f9c80452.png",
+    "static/media/OVOIcon.png": "/prorate-engine/static/media/OVOIcon.d229b70d45b565e3f42a.png",
+    "static/media/DanaIcon.png": "/prorate-engine/static/media/DanaIcon.1f474dd9e2fff1f2a08e.png",
+    "static/media/GopayIcon.png": "/prorate-engine/static/media/GopayIcon.57eda055423eb462a944.png",
+    "static/media/CashIcon.png": "/prorate-engine/static/media/CashIcon.dc02f50a0cd303d85d0d.png",
     "index.html": "/prorate-engine/index.html",
-    "main.50bbccc4.css.map": "/prorate-engine/static/css/main.50bbccc4.css.map",
-    "main.c9cd84b4.js.map": "/prorate-engine/static/js/main.c9cd84b4.js.map"
+    "main.9ff89e48.css.map": "/prorate-engine/static/css/main.9ff89e48.css.map",
+    "main.66fa0464.js.map": "/prorate-engine/static/js/main.66fa0464.js.map"
   },
   "entrypoints": [
-    "static/css/main.50bbccc4.css",
-    "static/js/main.c9cd84b4.js"
+    "static/css/main.9ff89e48.css",
+    "static/js/main.66fa0464.js"
   ]
 }
