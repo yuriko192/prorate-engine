@@ -5,3 +5,5 @@ export const DefaultLocalStorageExpiry = 5 * Minute
 
 export const LocalThemeKey = 'theme-mode-preference'
 export const LocalItemListKey = 'item-list'
+
+export const EnableShareFunc = false

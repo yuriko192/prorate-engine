@@ -1,9 +1,9 @@
 import React from "react";
 import {Button, Dialog, DialogContent, DialogTitle, List, ListItem, TextField} from "@mui/material";
-import {SimpleDialogProps} from "../interface";
+import {AddItemDialogProps} from "../interface";
 import {dialogMode} from "../enums";
 
-export function AddItemDialog(props: SimpleDialogProps) {
+export function AddItemDialog(props: AddItemDialogProps) {
     const {onClose, open} = props;
     const [clickedSubmit, setClickedSubmitStatus] = React.useState(false);
     const [productName, setProductName] = React.useState("");

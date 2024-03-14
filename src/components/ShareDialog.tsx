@@ -2,9 +2,9 @@ import React from "react";
 import {Dialog, DialogContent, DialogTitle, Grid, TextField, Typography} from "@mui/material";
 import {PaymentDetailCard} from "./PaymentDetailCard";
 import {paymentType} from "../enums";
-import {PaymentDetails} from "../interface";
+import {PaymentDetails, ShareDialogProps} from "../interface";
 
-export function ShareDialog() {
+export function ShareDialog(props: ShareDialogProps) {
     const payments: Array<PaymentDetails> = [
         {
             type: paymentType.BCA,
@@ -18,8 +18,7 @@ export function ShareDialog() {
         }
     ]
     return (
-        <Dialog onClose={() => {
-        }} open={false} maxWidth={'md'} fullWidth>
+        <Dialog onClose={props.onClose} open={props.open} maxWidth={'md'} fullWidth>
             <DialogTitle>SHARE</DialogTitle>
             <DialogContent>
                 <Grid container spacing={2} py={'1rem'} alignItems={'center'}>

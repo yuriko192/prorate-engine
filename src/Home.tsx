@@ -1,5 +1,5 @@
 import React from "react";
-import {onCloseParam, ProductDetail, ProrateResult} from "./interface";
+import {onCloseItemDialogParam, ProductDetail, ProrateResult} from "./interface";
 import {dialogMode} from "./enums";
 import {
     AppBar,
@@ -24,7 +24,7 @@ import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
 import {AddItemDialog} from "./components/AddItemDialog";
 import {ColorModeContext} from "./context";
 import {currFormatter, GetLocalStorage, RemoveLocalStorage, SetLocalStorageWithExpiry} from "./utils";
-import {DefaultLocalStorageExpiry, LocalItemListKey} from "./const";
+import {DefaultLocalStorageExpiry, EnableShareFunc, LocalItemListKey} from "./const";
 import {ShareDialog} from "./components/ShareDialog";
 import './Home.scss';
 
@@ -33,16 +33,25 @@ function Home() {
     const theme = useTheme();
     const colorMode = React.useContext(ColorModeContext);
 
-    const [open, setOpen] = React.useState(false);
-    const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey)?GetLocalStorage(LocalItemListKey):[])
+    const [isOpenShareDialog, setIsOpenShareDialog] = React.useState(false);
+    const [isOpenAddItemDialog, setIsOpenAddItemDialog] = React.useState(false);
+    const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey) ? GetLocalStorage(LocalItemListKey) : [])
     const [discountAmount, setDiscountAmount] = React.useState(0)
     const [otherFee, setOtherFee] = React.useState(0)
     const [dialogModeState, setDialogMode] = React.useState<dialogMode>(dialogMode.NONE)
     const [dialogProductDetail, setDialogProductDetail] = React.useState<ProductDetail>()
     const [dialogIndex, setDialogIndex] = React.useState(0)
 
+    const handleCloseShare = () => {
+        setIsOpenShareDialog(false)
+    }
+
+    const handleOpenShare = () => {
+        setIsOpenShareDialog(true)
+    }
+
     const handleClickOpen = () => {
-        setOpen(true);
+        setIsOpenAddItemDialog(true);
         setDialogMode(dialogMode.ADD)
     };
 
@@ -51,13 +60,13 @@ function Home() {
             return
         }
 
-        setOpen(true)
+        setIsOpenAddItemDialog(true)
         setDialogMode(dialogMode.EDIT)
         setDialogIndex(idx)
         setDialogProductDetail(productList[idx])
     }
 
-    const handleClear = ()=>{
+    const handleClear = () => {
         RemoveLocalStorage(LocalItemListKey)
         setProductList([])
     }
@@ -66,8 +75,8 @@ function Home() {
         setProductList(productList.filter((product, productIdx) => productIdx != idx))
     }
 
-    const handleClose = (param?: onCloseParam) => {
-        setOpen(false);
+    const handleClose = (param?: onCloseItemDialogParam) => {
+        setIsOpenAddItemDialog(false);
         setDialogProductDetail(undefined);
         setDialogMode(dialogMode.NONE);
 
@@ -106,7 +115,7 @@ function Home() {
         totalWeight = 0,
         totalFinalPrice = 0
 
-    SetLocalStorageWithExpiry(LocalItemListKey, productList,DefaultLocalStorageExpiry)
+    SetLocalStorageWithExpiry(LocalItemListKey, productList, DefaultLocalStorageExpiry)
     productList.forEach((eachProduct) => {
         totalWeight += eachProduct.Quantity
         totalProductPrice += eachProduct.Price
@@ -118,7 +127,7 @@ function Home() {
         })
     })
 
-    prorateDataResult.forEach((eachDataResult:ProrateResult, idx:number) => {
+    prorateDataResult.forEach((eachDataResult: ProrateResult, idx: number) => {
         eachDataResult.FinalPrice = eachDataResult.ProductPrice
 
         if (discountAmount > 0) {
@@ -132,7 +141,6 @@ function Home() {
         totalFinalPrice += eachDataResult.FinalPrice
         prorateDataResult[idx] = eachDataResult
     })
-
 
     return (
         <React.Fragment>
@@ -256,10 +264,13 @@ function Home() {
                                             <Button variant='contained' fullWidth sx={{minHeight: 50}}
                                                     onClick={handleClickOpen}>Add Product</Button>
                                         </Grid>
-                                        <Grid item xs={4}>
-                                            <Button variant={'outlined'} fullWidth sx={{minHeight: 50}}
-                                                    onClick={handleClickOpen}>Share</Button>
-                                        </Grid>
+                                        {EnableShareFunc ?
+                                            <Grid item xs={4}>
+                                                <Button variant={'outlined'} fullWidth sx={{minHeight: 50}}
+                                                        onClick={handleOpenShare}>Share</Button>
+                                            </Grid>
+                                            : <></>
+                                        }
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -299,13 +310,19 @@ function Home() {
                 </div>
             </div>
             <AddItemDialog
-                open={open}
+                open={isOpenAddItemDialog}
                 onClose={handleClose}
                 mode={dialogModeState}
                 productDetail={dialogProductDetail}
                 index={dialogIndex}
             />
-            <ShareDialog></ShareDialog>
+            {EnableShareFunc ?
+                <ShareDialog
+                    open={isOpenShareDialog}
+                    onClose={handleCloseShare}
+                ></ShareDialog>
+                : <></>
+            }
         </React.Fragment>
     );
 }

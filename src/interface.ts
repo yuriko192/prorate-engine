@@ -13,18 +13,24 @@ export interface ProrateResult {
     FinalPrice: number,
 }
 
-export interface onCloseParam {
+export interface onCloseItemDialogParam {
     mode: dialogMode,
     index: number,
     productDetail: ProductDetail,
 }
 
-export interface SimpleDialogProps {
+export interface AddItemDialogProps {
     open: boolean;
-    onClose: (param?: onCloseParam) => void;
+    onClose: (param?: onCloseItemDialogParam) => void;
     mode: dialogMode,
     index?: number,
     productDetail?: ProductDetail,
+}
+
+export interface ShareDialogProps {
+    open: boolean;
+    onClose: () => void;
+
 }
 
 export interface PaymentDetails {
