@@ -1,11 +1,11 @@
 import React from "react";
-import {onCloseItemDialogParam, ProductDetail, ProrateResult} from "./interface";
-import {dialogMode} from "./enums";
+import {onCloseItemDialogParam, ProductDetail} from "./interface";
+import {dialogMode, themeMode} from "./enums";
 import {
     AppBar,
-    Button,
+    Button, Checkbox,
     Container,
-    Grid,
+    Grid, IconButton,
     Paper,
     Table,
     TableBody,
@@ -24,7 +24,13 @@ import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
 import {AddItemDialog} from "./components/AddItemDialog";
 import {ColorModeContext} from "./context";
 import {currFormatter, GetLocalStorage, RemoveLocalStorage, SetLocalStorageWithExpiry} from "./utils";
-import {DefaultLocalStorageExpiry, EnableShareFunc, LocalItemListKey} from "./const";
+import {
+    DefaultLocalStorageExpiry,
+    EnableShareFunc,
+    LocalDiscountAmtKey,
+    LocalFeeAmtKey,
+    LocalItemListKey, LocalThemeKey
+} from "./const";
 import {ShareDialog} from "./components/ShareDialog";
 import './Home.scss';
 
@@ -35,9 +41,12 @@ function Home() {
 
     const [isOpenShareDialog, setIsOpenShareDialog] = React.useState(false);
     const [isOpenAddItemDialog, setIsOpenAddItemDialog] = React.useState(false);
-    const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey) ? GetLocalStorage(LocalItemListKey) : [])
-    const [discountAmount, setDiscountAmount] = React.useState(0)
-    const [otherFee, setOtherFee] = React.useState(0)
+
+    const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey) ?? [])
+    const [discountAmount, setDiscountAmount] = React.useState(GetLocalStorage(LocalDiscountAmtKey) ?? 0)
+    const [otherFee, setOtherFee] = React.useState(GetLocalStorage(LocalFeeAmtKey) ?? 0)
+    const [isSelectAll, setSelectAll] = React.useState(productList.length > 0 ? productList.every(product => product.Selected) : false)
+
     const [dialogModeState, setDialogMode] = React.useState<dialogMode>(dialogMode.NONE)
     const [dialogProductDetail, setDialogProductDetail] = React.useState<ProductDetail>()
     const [dialogIndex, setDialogIndex] = React.useState(0)
@@ -67,8 +76,11 @@ function Home() {
     }
 
     const handleClear = () => {
-        RemoveLocalStorage(LocalItemListKey)
+        localStorage.clear()
+        localStorage.setItem(LocalThemeKey, theme.palette.mode)
         setProductList([])
+        setDiscountAmount(0)
+        setOtherFee(0)
     }
 
     const handleDelete = (idx: number) => {
@@ -86,32 +98,56 @@ function Home() {
 
         if (param.mode == dialogMode.ADD) {
             setProductList([...productList, {
+                Selected: false,
                 Name: param.productDetail.Name,
                 Price: param.productDetail.Price,
                 Quantity: param.productDetail.Quantity,
+                ProratedPrice: param.productDetail.ProratedPrice,
             }])
+            setSelectAll(false)
             return
         }
 
         if (param.mode == dialogMode.EDIT) {
-            let newProductList = new Array<ProductDetail>
-            productList.forEach((eachProduct, productIdx) => {
-                if (param.index == productIdx) {
-                    newProductList.push({
-                        Name: param.productDetail.Name,
-                        Price: param.productDetail.Price,
-                        Quantity: param.productDetail.Quantity,
-                    })
-                    return
-                }
-                newProductList.push(eachProduct)
-            })
+            let newProductList = productList.map((product, index) => (
+                index === param.index ? {
+                    Selected: false,
+                    Name: param.productDetail.Name,
+                    Price: param.productDetail.Price,
+                    Quantity: param.productDetail.Quantity,
+                    ProratedPrice: param.productDetail.ProratedPrice,
+                } : product
+            ));
             setProductList(newProductList)
         }
     };
 
-    let prorateDataResult = new Array<ProrateResult>,
-        totalProductPrice = 0,
+    let handleRemoveSelected = () => {
+        setSelectAll(false)
+        setProductList(productList.filter((product) => !product.Selected))
+    };
+
+    let handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = e.target.checked
+        const updatedProductList = productList.map(product => ({
+            ...product,
+            Selected: checked
+        }));
+        setSelectAll(checked)
+        setProductList(updatedProductList)
+    };
+
+    const handleSelectProduct = (idx: number) => {
+        return () => {
+            const updatedProductList = productList.map((product, index) => (
+                index === idx ? {...product, Selected: !product.Selected} : product
+            ));
+            setSelectAll(updatedProductList.every(product => product.Selected))
+            setProductList(updatedProductList)
+        }
+    };
+
+    let totalProductPrice = 0,
         totalWeight = 0,
         totalFinalPrice = 0
 
@@ -119,28 +155,23 @@ function Home() {
     productList.forEach((eachProduct) => {
         totalWeight += eachProduct.Quantity
         totalProductPrice += eachProduct.Price
-        prorateDataResult.push({
-            ProductName: eachProduct.Name,
-            ProductPrice: eachProduct.Price,
-            Quantity: eachProduct.Quantity,
-            FinalPrice: 0,
-        })
     })
 
-    prorateDataResult.forEach((eachDataResult: ProrateResult, idx: number) => {
-        eachDataResult.FinalPrice = eachDataResult.ProductPrice
+    productList.forEach((eachDataResult: ProductDetail, idx: number) => {
+        eachDataResult.ProratedPrice = eachDataResult.Price
 
         if (discountAmount > 0) {
-            eachDataResult.FinalPrice = eachDataResult.ProductPrice - (eachDataResult.ProductPrice / totalProductPrice * discountAmount)
+            eachDataResult.ProratedPrice = eachDataResult.Price - (eachDataResult.Price / totalProductPrice * discountAmount)
         }
 
         if (otherFee > 0) {
-            eachDataResult.FinalPrice += (otherFee * eachDataResult.Quantity / totalWeight)
+            eachDataResult.ProratedPrice += (otherFee * eachDataResult.Quantity / totalWeight)
         }
 
-        totalFinalPrice += eachDataResult.FinalPrice
-        prorateDataResult[idx] = eachDataResult
+        totalFinalPrice += eachDataResult.ProratedPrice
     })
+
+
 
     return (
         <React.Fragment>
@@ -154,7 +185,7 @@ function Home() {
                         <DeleteIcon/> Clear
                     </Button>
                     <Button sx={{ml: 1}} onClick={colorMode.toggleColorMode} color="inherit">
-                        {theme.palette.mode} mode {theme.palette.mode === 'dark' ? <Brightness7Icon/> :
+                        {theme.palette.mode} mode {theme.palette.mode === themeMode.DARK ? <Brightness7Icon/> :
                         <Brightness4Icon/>}
                     </Button>
                 </Toolbar>
@@ -170,12 +201,10 @@ function Home() {
                                             value={(!discountAmount || discountAmount <= 0) ? '' : discountAmount}
                                             variant='outlined' type='number' label='Discount amount' fullWidth
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                if (!event.target.valueAsNumber) {
-                                                    setDiscountAmount(0)
-                                                    return
-                                                }
+                                                const val = event.target.valueAsNumber ?? 0
+                                                SetLocalStorageWithExpiry(LocalDiscountAmtKey, val, DefaultLocalStorageExpiry)
+                                                setDiscountAmount(val);
 
-                                                setDiscountAmount(event.target.valueAsNumber);
                                             }}
                                         />
                                     </Grid>
@@ -184,12 +213,9 @@ function Home() {
                                                    variant='outlined'
                                                    type='number' label='Other fee' fullWidth
                                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                       if (!event.target.valueAsNumber) {
-                                                           setOtherFee(0)
-                                                           return
-                                                       }
-
-                                                       setOtherFee(event.target.valueAsNumber);
+                                                       const val = event.target.valueAsNumber ?? 0
+                                                       SetLocalStorageWithExpiry(LocalFeeAmtKey, val, DefaultLocalStorageExpiry)
+                                                       setOtherFee(val);
                                                    }}
                                         />
                                     </Grid>
@@ -199,6 +225,8 @@ function Home() {
                                         <Table>
                                             <TableHead>
                                                 <TableRow>
+                                                    <TableCell><Checkbox onChange={handleSelectAll}
+                                                                         checked={isSelectAll}/> </TableCell>
                                                     <TableCell>Product Name</TableCell>
                                                     <TableCell align='center'>Price</TableCell>
                                                     <TableCell align='center'>Quantity</TableCell>
@@ -208,36 +236,39 @@ function Home() {
                                             </TableHead>
                                             <TableBody sx={{overflowY: 'auto'}}>
                                                 {
-                                                    prorateDataResult.map(
+                                                    productList.map(
                                                         (product, idx) =>
                                                             <TableRow key={idx}>
-                                                                <TableCell>{product.ProductName}</TableCell>
+                                                                <TableCell><Checkbox checked={product.Selected}
+                                                                                     onChange={handleSelectProduct(idx)}/>
+                                                                </TableCell>
+                                                                <TableCell>{product.Name}</TableCell>
                                                                 <TableCell
-                                                                    align='center'>{currFormatter.format(product.ProductPrice)}</TableCell>
+                                                                    align='center'>{currFormatter.format(product.Price)}</TableCell>
                                                                 <TableCell
                                                                     align='center'>{product.Quantity}</TableCell>
                                                                 <TableCell
-                                                                    align='center'>{currFormatter.format(product.FinalPrice)}
+                                                                    align='center'>{currFormatter.format(product.ProratedPrice)}
                                                                     <a style={{
                                                                         fontSize: 12,
                                                                         color: 'green',
                                                                         fontWeight: 'bold'
-                                                                    }}>({currFormatter.format(product.FinalPrice / product.Quantity)})</a></TableCell>
+                                                                    }}>({currFormatter.format(product.ProratedPrice / product.Quantity)})</a></TableCell>
                                                                 <TableCell align='center'>
                                                                     <Grid container columnSpacing={1} rowSpacing={1}
                                                                           justifyContent={'center'}>
                                                                         <Grid item>
-                                                                            <Button variant="contained"
-                                                                                    onClick={e => {
-                                                                                        handleClickEdit(idx)
-                                                                                    }}><EditIcon/></Button>
+                                                                            <IconButton
+                                                                                onClick={e => {
+                                                                                    handleClickEdit(idx)
+                                                                                }}><EditIcon/></IconButton>
                                                                         </Grid>
                                                                         <Grid item>
-                                                                            <Button variant="contained"
-                                                                                    color='error'
-                                                                                    onClick={e => {
-                                                                                        handleDelete(idx)
-                                                                                    }}><DeleteIcon/></Button>
+                                                                            <IconButton
+                                                                                color='error'
+                                                                                onClick={e => {
+                                                                                    handleDelete(idx)
+                                                                                }}><DeleteIcon/></IconButton>
                                                                         </Grid>
                                                                     </Grid>
                                                                 </TableCell>
@@ -247,6 +278,13 @@ function Home() {
                                             </TableBody>
                                             <TableFooter sx={{position: 'sticky'}}>
                                                 <TableRow>
+                                                    <TableCell>
+                                                        <IconButton color='error' onClick={handleRemoveSelected}
+                                                                    disabled={!productList.some(product => product.Selected)}>
+                                                            <DeleteIcon/>
+                                                        </IconButton>
+                                                    </TableCell>
+
                                                     <TableCell>Total</TableCell>
                                                     <TableCell
                                                         align='center'>{currFormatter.format(totalProductPrice)}</TableCell>

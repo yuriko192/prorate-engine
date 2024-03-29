@@ -34,9 +34,11 @@ export function AddItemDialog(props: AddItemDialogProps) {
             mode: props.mode,
             index: props.index as number,
             productDetail: {
+                Selected: false,
                 Name: productName,
                 Price: productPrice,
                 Quantity: productWeight,
+                ProratedPrice: 0,
             },
         });
 

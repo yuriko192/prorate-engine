@@ -1,16 +1,11 @@
 import {dialogMode, paymentType} from "./enums";
 
 export interface ProductDetail {
+    Selected: boolean,
     Name: string,
     Price: number,
     Quantity: number,
-}
-
-export interface ProrateResult {
-    ProductName: string,
-    ProductPrice: number,
-    Quantity: number,
-    FinalPrice: number,
+    ProratedPrice: number,
 }
 
 export interface onCloseItemDialogParam {
