@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/prorate-engine/static/css/main.9ff89e48.css",
-    "main.js": "/prorate-engine/static/js/main.94544fce.js",
+    "main.js": "/prorate-engine/static/js/main.cf5bb805.js",
     "static/media/BCAIcon.png": "/prorate-engine/static/media/BCAIcon.3177f8084bf0f9c80452.png",
     "static/media/OVOIcon.png": "/prorate-engine/static/media/OVOIcon.d229b70d45b565e3f42a.png",
     "static/media/DanaIcon.png": "/prorate-engine/static/media/DanaIcon.1f474dd9e2fff1f2a08e.png",
@@ -9,10 +9,10 @@
     "static/media/CashIcon.png": "/prorate-engine/static/media/CashIcon.dc02f50a0cd303d85d0d.png",
     "index.html": "/prorate-engine/index.html",
     "main.9ff89e48.css.map": "/prorate-engine/static/css/main.9ff89e48.css.map",
-    "main.94544fce.js.map": "/prorate-engine/static/js/main.94544fce.js.map"
+    "main.cf5bb805.js.map": "/prorate-engine/static/js/main.cf5bb805.js.map"
   },
   "entrypoints": [
     "static/css/main.9ff89e48.css",
-    "static/js/main.94544fce.js"
+    "static/js/main.cf5bb805.js"
   ]
 }
