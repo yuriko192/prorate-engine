@@ -8,14 +8,22 @@ import {LocalThemeKey} from "./const";
 
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const preferedTheme = prefersDarkMode ? themeMode.DARK : themeMode.LIGHT
+    let localTheme = localStorage.getItem(LocalThemeKey) as themeMode
 
-    const [mode, setMode] = React.useState<themeMode>(prefersDarkMode ? themeMode.DARK : themeMode.LIGHT);
+    localTheme = (localTheme ?? preferedTheme)
+    if (!Object.values(themeMode).includes(localTheme)) {
+        localTheme = preferedTheme
+        localStorage.setItem(LocalThemeKey, preferedTheme)
+    }
+
+    const [mode, setMode] = React.useState<themeMode>(localTheme);
     const colorMode = React.useMemo(
         () => ({
             toggleColorMode: () => {
                 setMode((prevMode) => {
                     let newTheme = prevMode === themeMode.DARK ? themeMode.LIGHT : themeMode.DARK
-                    localStorage.setItem(LocalThemeKey,newTheme)
+                    localStorage.setItem(LocalThemeKey, newTheme)
                     return newTheme
                 });
             },
