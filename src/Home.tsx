@@ -2,10 +2,10 @@ import React from "react";
 import {onCloseItemDialogParam, ProductDetail} from "./interface";
 import {dialogMode, themeMode} from "./enums";
 import {
-    AppBar,
+    AppBar, Box,
     Button, Checkbox,
-    Container,
-    Grid, IconButton,
+    Container, Drawer,
+    Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
     Paper,
     Table,
     TableBody,
@@ -20,6 +20,8 @@ import {
 } from "@mui/material";
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
 import {AddItemDialog} from "./components/AddItemDialog";
 import {ColorModeContext} from "./context";
@@ -41,6 +43,7 @@ function Home() {
 
     const [isOpenShareDialog, setIsOpenShareDialog] = React.useState(false);
     const [isOpenAddItemDialog, setIsOpenAddItemDialog] = React.useState(false);
+    const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
 
     const [productList, setProductList] = React.useState<Array<ProductDetail>>(GetLocalStorage(LocalItemListKey) ?? [])
     const [discountAmount, setDiscountAmount] = React.useState(GetLocalStorage(LocalDiscountAmtKey) ?? 0)
@@ -170,7 +173,23 @@ function Home() {
 
         totalFinalPrice += eachDataResult.ProratedPrice
     })
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setIsOpenSidebar(newOpen);
+    };
 
+    const DrawerList = (
+        <Box sx={{width: 250}} role="presentation" onClick={toggleDrawer(false)}>
+            <List>
+                <ListItem
+                >
+                    <ListItemButton onClick={toggleDrawer(false)}>
+                        <MenuOpenIcon/>
+                        <ListItemText primary={"Prorate Engine"} sx={{ml: 3}}/>
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </Box>
+    );
 
 
     return (
@@ -178,6 +197,16 @@ function Home() {
             <div className="MainContainer">
                 <Toolbar
                 >
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{mr: 2}}
+                        onClick={toggleDrawer(true)}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
                     <Typography variant="h6" color="inherit" flexGrow={1} noWrap>
                         Prorate Engine
                     </Typography>
@@ -347,6 +376,9 @@ function Home() {
                     </div>
                 </div>
             </div>
+            <Drawer open={isOpenSidebar} onClose={toggleDrawer(false)}>
+                {DrawerList}
+            </Drawer>
             <AddItemDialog
                 open={isOpenAddItemDialog}
                 onClose={handleClose}
