@@ -37,7 +37,6 @@ import {ShareDialog} from "./components/ShareDialog";
 import './Home.scss';
 
 
-
 function Home() {
     const theme = useTheme();
     const colorMode = React.useContext(ColorModeContext);

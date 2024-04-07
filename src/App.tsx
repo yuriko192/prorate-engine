@@ -16,15 +16,17 @@ function App() {
         localTheme = preferedTheme
         localStorage.setItem(LocalThemeKey, preferedTheme)
     }
+    document.documentElement.classList[localTheme == themeMode.DARK ? 'add' : 'remove']('dark');
 
     const [mode, setMode] = React.useState<themeMode>(localTheme);
     const colorMode = React.useMemo(
         () => ({
             toggleColorMode: () => {
                 setMode((prevMode) => {
-                    let newTheme = prevMode === themeMode.DARK ? themeMode.LIGHT : themeMode.DARK
-                    localStorage.setItem(LocalThemeKey, newTheme)
-                    return newTheme
+                    localTheme = prevMode === themeMode.DARK ? themeMode.LIGHT : themeMode.DARK
+                    document.documentElement.classList[localTheme == themeMode.DARK ? 'add' : 'remove']('dark');
+                    localStorage.setItem(LocalThemeKey, localTheme)
+                    return localTheme
                 });
             },
         }),
