@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Dialog, DialogContent, DialogTitle, List, ListItem, TextField} from "@mui/material";
-import {AddItemDialogProps} from "../interface";
-import {dialogMode} from "../enums";
+import {AddItemDialogProps} from "@/src/interface";
+import {dialogMode} from "@/src/enums";
 
 export function AddItemDialog(props: AddItemDialogProps) {
     const {onClose, open} = props;

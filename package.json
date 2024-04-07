@@ -9,6 +9,8 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-slot": "^1.0.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,12 +18,17 @@
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
     "gh-pages": "^6.1.1",
     "intl": "^1.2.5",
+    "lucide-react": "^0.365.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "sass": "^1.71.1",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3"
   },
   "overrides": {
@@ -32,10 +39,10 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -b release -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -54,5 +61,9 @@
       "not dead",
       "not op_mini all"
     ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "tailwindcss": "^3.4.3"
   }
 }
